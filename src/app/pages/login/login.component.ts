@@ -18,8 +18,7 @@ export class LoginComponent implements OnInit {
     this.usuario = new UsuarioModel();
   }
 
-  login(form : NgForm) {
-
+  login(form : NgForm) { 
     if (form.invalid) { return };
 
     console.log(form);
