@@ -29,6 +29,6 @@ export class RegistroComponent implements OnInit {
     console.log(this.usuario);
     console.log(form);
   }
-
+   
 
 }
