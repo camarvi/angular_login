@@ -8,7 +8,7 @@ import { UsuarioModel } from '../models/usuario.models';
 export class AuthService {
 
   private url = 'https://identitytoolkit.googleapis.com/v1';
-  private apikey = '--------------------------------------';
+  private apikey = '---------------------------------------';
 
 
   //Crear nuevo usuario
@@ -21,7 +21,18 @@ export class AuthService {
 
   logout(){}
 
-  login(usuario : UsuarioModel){}
+  login(usuario : UsuarioModel){
+
+      const authData = {
+        email : usuario.email,
+        password : usuario.password,
+        returnSecureToken : true
+      };
+
+      return this.http.post
+      (`${ this.url}/accounts:signInWithPassword?key=${ this.apikey }`, authData);
+
+  }
 
   nuevoUsuario( usuario : UsuarioModel){
 
