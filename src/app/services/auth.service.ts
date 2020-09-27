@@ -2,13 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UsuarioModel } from '../models/usuario.models';
 
+import { map } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
   private url = 'https://identitytoolkit.googleapis.com/v1';
-  private apikey = '---------------------------------------';
+  private apikey = 'AIzaSyCiUH-h3PaMb4lQ3Xeq61Y7O_HiGsQ5IJ8';
+
+  //Variable donde guardamos el token del usuario validado
+
+  userToken : string;
 
 
   //Crear nuevo usuario
@@ -17,7 +23,10 @@ export class AuthService {
   //Login Usuario
   //https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+      //Cuando entramos ya sabemos si existe un token
+      this.leerToken();
+   }
 
   logout(){}
 
@@ -30,7 +39,14 @@ export class AuthService {
       };
 
       return this.http.post
-      (`${ this.url}/accounts:signInWithPassword?key=${ this.apikey }`, authData);
+      (`${ this.url}/accounts:signInWithPassword?key=${ this.apikey }`, 
+      authData).pipe( //Si hay un error nunca se dispara el map
+        map(resp => {
+         
+          this.guardarToken(resp['idToken']);
+          return resp;
+        })
+      );
 
   }
 
@@ -44,9 +60,37 @@ export class AuthService {
 
     return this.http.post(
       `${ this.url }/accounts:signUp?key=${ this.apikey }`,
-      authData);
+      authData).pipe( //Si hay un error nunca se dispara el map
+        map(resp => {
+         
+          this.guardarToken(resp['idToken']);
+          return resp;
+        })
+      );
 
   }
 
+
+  private guardarToken( idToken : string){
+
+    this.userToken = idToken;
+    
+    //Almacenar el token en el localstorage
+
+    localStorage.setItem('token', idToken);
+
+  }
+
+  leerToken(){
+
+    if ( localStorage.getItem('token')) {
+      this.userToken = localStorage.getItem('token');
+    } else {   // Sino existe
+      this.userToken = '';
+    }
+    
+    return this.userToken;
+
+  }
 
 }
