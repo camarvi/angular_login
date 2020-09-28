@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
 export class AuthService {
 
   private url = 'https://identitytoolkit.googleapis.com/v1';
-  private apikey = 'AIzaSyCiUH-h3PaMb4lQ3Xeq61Y7O_HiGsQ5IJ8';
+  private apikey = '---------------------------------------';
 
   //Variable donde guardamos el token del usuario validado
 
