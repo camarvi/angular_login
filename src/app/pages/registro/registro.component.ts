@@ -5,6 +5,10 @@ import { NgForm } from '@angular/forms';
 
 import { AuthService } from '../../services/auth.service';
 
+// Importrar SweetAlert
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
@@ -14,7 +18,8 @@ export class RegistroComponent implements OnInit {
 
   usuario : UsuarioModel;  //Instancia para manejar los datos
 
-  constructor(private auth : AuthService) { }
+  constructor(private auth : AuthService,
+              private router : Router) { }
 
   ngOnInit() { 
   
@@ -31,11 +36,29 @@ export class RegistroComponent implements OnInit {
     //console.log(this.usuario);
     //console.log(form);
 
+    Swal.fire({
+      allowOutsideClick : false,
+      text: 'Espere por favor..',
+      icon : 'info'
+    });
+
     this.auth.nuevoUsuario(this.usuario)
     .subscribe( resp =>{
           console.log(resp);
+         // Swal.fire({
+         //   icon : 'success',
+         //   title :'Registro Usuario',
+         //   text: 'Usuario Creado correctamente'        
+        //  });
+        Swal.close();
+        this.router.navigateByUrl('/home');
     }, (err)=>{
       console.log(err.error.error.message);
+      Swal.fire({
+        icon : 'error',
+        title :'Error al registrar',
+        text: err.error.error.message         
+      });
     });
 
 
